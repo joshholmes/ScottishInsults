@@ -1,0 +1,20 @@
+{
+  "name": "scottishinsults",
+  "version": "1.0.0",
+  "description": "A Scottish Insult Generator",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "scottish",
+    "insults",
+    "generator"
+  ],
+  "author": "Josh Holmes",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

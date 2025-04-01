@@ -1,0 +1,322 @@
+/* Modern Scottish Theme */
+:root {
+    --primary-color: #005EB8; /* Scottish flag blue */
+    --secondary-color: #FFFFFF; /* Scottish flag white */
+    --accent-color: #FF4B3E; /* Warm accent for interactive elements */
+    --text-color: #2C3E50;
+    --background-color: #F7F9FC;
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-body: 'Open Sans', Arial, sans-serif;
+}
+
+/* Base styles */
+body {
+    font-family: var(--font-body);
+    background-color: var(--background-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    min-height: 100vh;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('/images/saltire.svg') no-repeat center center fixed;
+    background-size: cover;
+    opacity: 0.03;
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Header styling */
+#header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, #003A75 100%);
+    color: var(--secondary-color);
+    padding: 4rem 2rem;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+#header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('/images/saltire.svg') no-repeat center center;
+    background-size: cover;
+    opacity: 0.1;
+    z-index: 0;
+    animation: subtle-move 30s ease-in-out infinite;
+}
+
+@keyframes subtle-move {
+    0% { transform: scale(1.1) rotate(-1deg); }
+    50% { transform: scale(1.15) rotate(1deg); }
+    100% { transform: scale(1.1) rotate(-1deg); }
+}
+
+#header h1, #header p {
+    position: relative;
+    z-index: 1;
+}
+
+#header h1 {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+#header p {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    opacity: 0.9;
+}
+
+/* Main content area */
+.container.body-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.jumbotron {
+    background: rgba(255, 255, 255, 0.97);
+    border-radius: 15px;
+    padding: 2rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    margin: -3rem auto 2rem;
+    position: relative;
+    max-width: 800px;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* Insult display styling */
+#insults {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    color: var(--text-color);
+    padding: 2rem;
+    text-align: center;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+}
+
+#final-insult {
+    font-family: var(--font-heading);
+    font-size: 2rem;
+    color: var(--text-color);
+    padding: 2rem;
+    text-align: center;
+}
+
+/* Button styling */
+#start {
+    background-color: var(--accent-color);
+    color: var(--secondary-color);
+    font-family: var(--font-body);
+    font-size: 1.3rem;
+    font-weight: 600;
+    padding: 1rem 2.5rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 2rem auto;
+    display: block;
+}
+
+#start:hover {
+    background-color: #E43D30;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 75, 62, 0.3);
+}
+
+#start:active {
+    transform: translateY(0);
+}
+
+/* Social buttons styling */
+.social-share-buttons {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2rem;
+    padding: 1rem;
+    background: rgba(0, 94, 184, 0.05);
+    border-radius: 10px;
+}
+
+.social-button {
+    background: var(--secondary-color);
+    border: 2px solid #E8ECF2;
+    border-radius: 8px;
+    padding: 0.8rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.social-button img {
+    width: 24px;
+    height: 24px;
+    transition: all 0.3s ease;
+}
+
+/* Platform-specific hover effects */
+.social-button.twitter:hover {
+    background-color: #000000;
+}
+
+.social-button.twitter:hover img {
+    filter: invert(1);
+}
+
+.social-button.mastodon:hover {
+    background-color: #6364FF;
+}
+
+.social-button.mastodon:hover img {
+    filter: brightness(0) invert(1);
+}
+
+.social-button.bluesky:hover {
+    background-color: #0085FF;
+}
+
+.social-button.bluesky:hover img {
+    filter: brightness(0) invert(1);
+}
+
+.social-button.facebook:hover {
+    background-color: #1877F2;
+}
+
+.social-button.facebook:hover img {
+    filter: brightness(0) invert(1);
+}
+
+#copyThis {
+    background-color: var(--secondary-color);
+    color: var(--text-color);
+    border: 2px solid #E8ECF2;
+    padding: 0.8rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#copyThis:hover {
+    background-color: #F7F9FC;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Footer styling */
+#footer {
+    background: var(--text-color);
+    color: var(--secondary-color);
+    padding: 2rem;
+    text-align: center;
+    margin-top: 4rem;
+}
+
+#footer .copyright {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#footer .copyright li {
+    display: inline-block;
+    margin: 0 1rem;
+}
+
+#footer a {
+    color: var(--secondary-color);
+    text-decoration: none;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+}
+
+#footer a:hover {
+    opacity: 1;
+}
+
+/* Animation enhancements */
+.insult-part {
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.insult-part.rotating {
+    opacity: 0.8;
+    transform: scale(0.98);
+}
+
+.insult-part.final {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #header {
+        padding: 3rem 1rem;
+    }
+
+    #header h1 {
+        font-size: 2.5rem;
+    }
+
+    .jumbotron {
+        margin: -2rem 1rem 2rem;
+        padding: 1.5rem;
+    }
+
+    #insults, #final-insult {
+        font-size: 1.4rem;
+        padding: 1rem;
+    }
+
+    .social-share-buttons {
+        flex-wrap: wrap;
+    }
+}
+
+/* Ads container */
+#ads {
+    margin: 2rem auto;
+    max-width: 800px;
+    padding: 1rem;
+    background: var(--secondary-color);
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+} 
