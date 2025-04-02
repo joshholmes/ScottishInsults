@@ -82,8 +82,10 @@ class InsultGenerator {
         const sentence = parts.sentence.trim();
         
         // Update the current insult to match what's being displayed
+        // Store with pipe characters for the callback URL
         this.currentInsult = `${sentence}|${parts.adjective}|${parts.noun}!`;
         
+        // Display without pipe characters in the HTML
         insultsElement.innerHTML = `
             <span class="insult-part ${this.currentRotation.sentence < this.totalRotations.sentence ? 'rotating' : 'final'}">${sentence}</span>
             <span class="insult-part ${this.currentRotation.adjective < this.totalRotations.adjective ? 'rotating' : 'final'}">${parts.adjective}</span>
@@ -165,7 +167,10 @@ class InsultGenerator {
         // Encode the insult text for the URL
         const encodedInsult = encodeURIComponent(insult);
         const callbackUrl = `${mainUrl}/insult?text=${encodedInsult}`;
-        const shareText = `${insult}\n\nView this insult at: ${callbackUrl}`;
+        
+        // Create a display version of the insult without pipe characters
+        const displayInsult = insult.replace(/\|/g, ' ');
+        const shareText = `${displayInsult}\n\nView this insult at: ${callbackUrl}`;
         
         console.log('Share text:', shareText);
 
@@ -211,6 +216,7 @@ class InsultGenerator {
 
         // Format the text properly for speech
         const formattedText = this.currentInsult
+            .replace(/\|/g, ' ')  // Replace pipe characters with spaces
             .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
             .trim();              // Remove leading/trailing spaces
 
