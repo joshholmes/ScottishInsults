@@ -1,11 +1,10 @@
 {
-  "name": "scottishinsults",
+  "name": "scottish-insults",
   "version": "1.0.0",
-  "description": "A Scottish Insult Generator",
-  "main": "index.js",
+  "description": "Scottish Insult Generator",
+  "main": "server.js",
   "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
   "keywords": [
     "scottish",
@@ -15,6 +14,7 @@
   "author": "Josh Holmes",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "express": "^4.18.2"
   }
 }

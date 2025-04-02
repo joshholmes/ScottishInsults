@@ -1,72 +1,41 @@
-const http = require('http');
-const fs = require('fs');
+require('dotenv').config();
+const express = require('express');
 const path = require('path');
+const fs = require('fs');
+const app = express();
+const port = process.env.PORT || 3000;
 
-// MIME types for different file extensions
-const mimeTypes = {
-    '.html': 'text/html',
-    '.js': 'text/javascript',
-    '.css': 'text/css',
-    '.json': 'application/json',
-    '.png': 'image/png',
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
-    '.gif': 'image/gif',
-    '.svg': 'image/svg+xml',
-    '.ico': 'image/x-icon'
-};
+// Serve static files from the root directory
+app.use(express.static(path.join(__dirname)));
 
-const server = http.createServer((req, res) => {
-    // Log the request
-    console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
+// Handle insult callback URLs
+app.get('/insult', (req, res) => {
+    // Send the main page
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
-    // Parse URL to get the pathname
-    let pathname = req.url;
-    if (pathname === '/') {
-        pathname = '/index.html';
-    }
-
-    // Construct the absolute file path
-    const filePath = path.join(process.cwd(), pathname);
-
-    // Extract file extension
-    const ext = path.extname(filePath).toLowerCase();
+// API endpoint to get insult data by text
+app.get('/api/insult', (req, res) => {
+    const insultText = req.query.text;
     
-    // Get MIME type
-    const contentType = mimeTypes[ext] || 'application/octet-stream';
-
-    // Read and serve the file
-    fs.readFile(filePath, (error, content) => {
-        if (error) {
-            if (error.code === 'ENOENT') {
-                console.error(`File not found: ${filePath}`);
-                res.writeHead(404);
-                res.end(`File Not Found: ${pathname}`);
-            } else {
-                console.error(`Server error for ${filePath}:`, error);
-                res.writeHead(500);
-                res.end(`Server Error: ${error.code}`);
-            }
-        } else {
-            // Set response headers
-            const headers = {
-                'Content-Type': contentType,
-                'Cache-Control': 'public, max-age=86400', // Cache for 24 hours
-                'Access-Control-Allow-Origin': '*'
-            };
-
-            res.writeHead(200, headers);
-            res.end(content);
-            console.log(`Successfully served ${pathname} as ${contentType}`);
-        }
+    if (!insultText) {
+        return res.status(400).json({ error: 'No insult text provided' });
+    }
+    
+    // In a real application, you might want to validate or sanitize the text
+    res.json({
+        text: decodeURIComponent(insultText),
+        timestamp: new Date().toISOString()
     });
 });
 
-const PORT = 8000;
+// Catch-all route to handle any other paths
+app.get('*', (req, res) => {
+    // For any other route, send the main page
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
-// Start the server
-server.listen(PORT, () => {
-    console.log(`Server running at http://localhost:${PORT}/`);
-    console.log(`Serving files from: ${process.cwd()}`);
-    console.log('Press Ctrl+C to stop the server');
+// Start server
+app.listen(port, () => {
+    console.log(`Server running at http://localhost:${port}`);
 }); 

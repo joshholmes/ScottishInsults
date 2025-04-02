@@ -113,7 +113,6 @@
 /* Button styling */
 #generateBtn {
     display: block;
-    margin: 20px auto;
     padding: 10px 30px;
     font-size: 1.2em;
     background-color: #4a4a4a;
@@ -146,4 +145,34 @@
     display: block;
     width: 100%;
     min-height: 90px;
+}
+
+.button-group {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.button-group .btn {
+    min-width: 120px;
+    height: 45px;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button-group .social-icon {
+    width: 24px;
+    height: 24px;
+}
+
+#voiceBtn .social-icon {
+    width: 24px;
+    height: 24px;
+}
+
+#voiceBtn:hover .social-icon {
+    transform: scale(1.1);
 } 

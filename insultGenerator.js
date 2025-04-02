@@ -26,6 +26,10 @@ class InsultGenerator {
             adjective: '',
             noun: ''
         };
+        // Initialize speech manager
+        this.speechManager = new SpeechManager();
+        // Make the generator available globally for the voice button
+        window.generator = this;
     }
 
     async loadData() {
@@ -77,6 +81,9 @@ class InsultGenerator {
         // Remove any trailing spaces from the sentence part
         const sentence = parts.sentence.trim();
         
+        // Update the current insult to match what's being displayed
+        this.currentInsult = `${sentence}|${parts.adjective}|${parts.noun}!`;
+        
         insultsElement.innerHTML = `
             <span class="insult-part ${this.currentRotation.sentence < this.totalRotations.sentence ? 'rotating' : 'final'}">${sentence}</span>
             <span class="insult-part ${this.currentRotation.adjective < this.totalRotations.adjective ? 'rotating' : 'final'}">${parts.adjective}</span>
@@ -111,7 +118,6 @@ class InsultGenerator {
 
         // Generate the final insult that we'll settle on
         this.finalParts = this.generateRandomInsult();
-        this.currentInsult = `${this.finalParts.sentence.trim()} ${this.finalParts.adjective} ${this.finalParts.noun}!`;
 
         // Start the rotation animation for each part
         const animatePart = (part, speed, totalRotations) => {
@@ -146,38 +152,91 @@ class InsultGenerator {
         setTimeout(() => {
             this.isAnimating = false;
             insultsElement.classList.remove('rotating');
+            // Update display one final time to ensure currentInsult matches
+            this.updateDisplay(this.finalParts);
             this.updateSocialLinks(this.currentInsult);
+            console.log('Animation complete, final insult:', this.currentInsult);
         }, maxDuration + 500); // Add 500ms buffer
     }
 
     updateSocialLinks(insult) {
-        // Twitter/X
+        // Use a hardcoded URL instead of process.env
+        const mainUrl = 'https://scottishinsults.com';
+        // Encode the insult text for the URL
+        const encodedInsult = encodeURIComponent(insult);
+        const callbackUrl = `${mainUrl}/insult?text=${encodedInsult}`;
+        const shareText = `${insult}\n\nView this insult at: ${callbackUrl}`;
+        
+        console.log('Share text:', shareText);
+
+        // Define the sharing functions directly on the window object
         window.shareOnTwitter = () => {
-            const tweetText = encodeURIComponent(insult + ' from @scottishinsults');
+            const tweetText = encodeURIComponent(shareText + ' from @scottishinsults');
             const twitterUrl = `https://twitter.com/intent/tweet?text=${tweetText}&hashtags=scottishinsults`;
             window.open(twitterUrl, '_blank', 'width=600,height=400');
         };
 
         // Mastodon
         window.shareOnMastodon = () => {
-            const mastodonText = encodeURIComponent(insult + ' #scottishinsults');
+            const mastodonText = encodeURIComponent(shareText + ' #scottishinsults');
             const mastodonUrl = `https://mastodon.social/share?text=${mastodonText}`;
             window.open(mastodonUrl, '_blank', 'width=600,height=400');
         };
 
         // Bluesky
         window.shareOnBluesky = () => {
-            const blueskyText = encodeURIComponent(insult + ' #scottishinsults');
+            const blueskyText = encodeURIComponent(shareText + ' #scottishinsults');
             const blueskyUrl = `https://bsky.app/intent/compose?text=${blueskyText}`;
             window.open(blueskyUrl, '_blank', 'width=600,height=400');
         };
 
         // Facebook
         window.shareOnFacebook = () => {
-            const shareUrl = window.location.href;
+            const shareUrl = callbackUrl;
             const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(insult)}`;
             window.open(fbUrl, '_blank', 'width=626,height=436');
         };
+    }
+
+    speakCurrentInsult() {
+        if (this.isAnimating) {
+            console.log('Cannot speak while generating new insult');
+            return;
+        }
+        
+        if (!this.currentInsult) {
+            console.log('No insult to speak');
+            return;
+        }
+
+        // Format the text properly for speech
+        const formattedText = this.currentInsult
+            .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
+            .trim();              // Remove leading/trailing spaces
+
+        console.log('Speaking current insult:', formattedText);
+        this.speechManager.speak(formattedText);
+    }
+
+    // Add this new method to validate if an insult could be generated from our data
+    isValidInsultFormat(insultText) {
+        // Remove the exclamation mark if present
+        const cleanText = insultText.endsWith('!') ? insultText.slice(0, -1) : insultText;
+        
+        // Split by the pipe character
+        const parts = cleanText.split('|');
+        
+        // Check if we have exactly three parts
+        if (parts.length !== 3) return false;
+        
+        // Check if each part exists in our data
+        const [sentence, adjective, noun] = parts;
+        
+        return (
+            this.sentences.includes(sentence) &&
+            this.adjectives.includes(adjective) &&
+            this.nouns.includes(noun)
+        );
     }
 }
 
@@ -201,7 +260,48 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Load the data and generate initial insult
     await generator.loadData();
-    generator.generateInsult(); // Auto-generate first insult
+    
+    // Check if there's an insult text in the URL query parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const insultText = urlParams.get('text');
+    
+    if (insultText) {
+        console.log('Found insult text in URL:', insultText);
+        
+        // Decode the insult text
+        const decodedInsult = decodeURIComponent(insultText);
+        
+        // Validate if this could be a real insult from our data
+        if (generator.isValidInsultFormat(decodedInsult)) {
+            console.log('Valid insult format found, displaying from URL');
+            
+            // Parse the insult parts
+            const cleanText = decodedInsult.endsWith('!') ? decodedInsult.slice(0, -1) : decodedInsult;
+            const [sentence, adjective, noun] = cleanText.split('|');
+            
+            // Display the specific insult with proper formatting
+            const insultsElement = document.getElementById('insults');
+            insultsElement.innerHTML = `
+                <span class="insult-part final">${sentence}</span>
+                <span class="insult-part final">${adjective}</span>
+                <span class="insult-part final">${noun}</span>!
+            `;
+            insultsElement.classList.add('final');
+            
+            // Set the current insult for sharing
+            generator.currentInsult = decodedInsult;
+            
+            // Update social links for this specific insult
+            generator.updateSocialLinks(decodedInsult);
+        } else {
+            console.log('Invalid insult format in URL, generating new insult');
+            // Generate a new insult if the URL text is invalid
+            generator.generateInsult();
+        }
+    } else {
+        // No specific insult requested, generate a random one
+        generator.generateInsult();
+    }
 
     // Initialize AdSense
     try {
