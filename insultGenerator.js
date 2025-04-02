@@ -193,7 +193,7 @@ class InsultGenerator {
         // Facebook
         window.shareOnFacebook = () => {
             const shareUrl = callbackUrl;
-            const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(insult)}`;
+            const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
             window.open(fbUrl, '_blank', 'width=626,height=436');
         };
     }
