@@ -20,16 +20,5 @@
       "renameLocals": true
     },
     "sourceMap": false
-  },
-  {
-    "outputFileName": "bundles/knockout.min.js",
-    "inputFiles": [
-      "node_modules/knockout/dist/knockout-latest.js"
-    ],
-    "minify": {
-      "enabled": true,
-      "renameLocals": true
-    },
-    "sourceMap": false
   }
 ] 

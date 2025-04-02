@@ -16,14 +16,6 @@ const files = [
     {
         from: path.join(__dirname, '..', 'node_modules', 'bootstrap', 'dist', 'js', 'bootstrap.bundle.min.js'),
         to: path.join(bundlesDir, 'bootstrap.min.js')
-    },
-    {
-        from: path.join(__dirname, '..', 'node_modules', 'knockout', 'build', 'output', 'knockout-latest.js'),
-        to: path.join(bundlesDir, 'knockout.min.js')
-    },
-    {
-        from: path.join(__dirname, '..', 'node_modules', 'modernizr', 'dist', 'modernizr.min.js'),
-        to: path.join(bundlesDir, 'modernizr.min.js')
     }
 ];
 

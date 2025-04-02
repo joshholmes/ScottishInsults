@@ -14,21 +14,6 @@ app.get('/insult', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// API endpoint to get insult data by text
-app.get('/api/insult', (req, res) => {
-    const insultText = req.query.text;
-    
-    if (!insultText) {
-        return res.status(400).json({ error: 'No insult text provided' });
-    }
-    
-    // In a real application, you might want to validate or sanitize the text
-    res.json({
-        text: decodeURIComponent(insultText),
-        timestamp: new Date().toISOString()
-    });
-});
-
 // Catch-all route to handle any other paths
 app.get('*', (req, res) => {
     // For any other route, send the main page
