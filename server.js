@@ -32,6 +32,12 @@ app.get('/insult', function(req, res) {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Handle about page
+app.get('/about', function(req, res) {
+    // Send the about page
+    res.sendFile(path.join(__dirname, 'about.html'));
+});
+
 // Catch-all route to handle any other paths
 app.get('*', function(req, res) {
     // For any other route, send the main page

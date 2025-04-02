@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scottish Insult Generator</title>
+    <meta name="description" content="Generate hilarious Scottish-style insults with our free insult generator. Share your favorite insults on social media or have them spoken aloud!">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="manifest" href="/site.webmanifest">
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/theme.css">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -45,6 +50,11 @@
         window.shareOnMastodon = function() { console.log('Sharing not ready yet'); };
         window.shareOnBluesky = function() { console.log('Sharing not ready yet'); };
         window.shareOnFacebook = function() { console.log('Sharing not ready yet'); };
+        window.shareOnLinkedIn = function() { console.log('Sharing not ready yet'); };
+        window.shareOnReddit = function() { console.log('Sharing not ready yet'); };
+        window.shareOnWhatsApp = function() { console.log('Sharing not ready yet'); };
+        window.shareOnTelegram = function() { console.log('Sharing not ready yet'); };
+        window.copyToClipboard = function() { console.log('Copy to clipboard not ready yet'); };
     </script>
 
     <!-- Facebook SDK -->
@@ -79,23 +89,38 @@
         <h1 class="text-center mb-4">Scottish Insult Generator</h1>
         <div id="insults" class="insult-container"></div>
         <div class="button-group mt-4">
-            <button id="generateBtn" class="btn btn-primary me-2">Let Fly!</button>
-            <button id="voiceBtn" class="btn btn-outline-primary" onclick="window.generator.speakCurrentInsult()">
+            <button id="generateBtn" class="btn btn-primary me-2" aria-label="Generate a new Scottish insult">Next slag!</button>
+            <button id="voiceBtn" class="btn btn-outline-primary" onclick="window.generator.speakCurrentInsult()" aria-label="Speak the current insult">
                 <img src="/images/speakingboy.svg" alt="Speak" class="social-icon">
             </button>
         </div>
         <div class="social-share mt-4">
-            <button class="btn btn-outline-primary me-2" onclick="shareOnTwitter()">
+            <button class="btn btn-outline-primary me-2" onclick="shareOnTwitter()" aria-label="Share on Twitter">
                 <img src="/images/twitter.svg" alt="Twitter" class="social-icon">
             </button>
-            <button class="btn btn-outline-primary me-2" onclick="shareOnMastodon()">
+            <button class="btn btn-outline-primary me-2" onclick="shareOnMastodon()" aria-label="Share on Mastodon">
                 <img src="/images/mastodon.svg" alt="Mastodon" class="social-icon">
             </button>
-            <button class="btn btn-outline-primary me-2" onclick="shareOnBluesky()">
+            <button class="btn btn-outline-primary me-2" onclick="shareOnBluesky()" aria-label="Share on Bluesky">
                 <img src="/images/bluesky.svg" alt="Bluesky" class="social-icon">
             </button>
-            <button class="btn btn-outline-primary" onclick="shareOnFacebook()">
+            <button class="btn btn-outline-primary me-2" onclick="shareOnFacebook()" aria-label="Share on Facebook">
                 <img src="/images/facebook.svg" alt="Facebook" class="social-icon">
+            </button>
+            <button class="btn btn-outline-primary me-2" onclick="shareOnLinkedIn()" aria-label="Share on LinkedIn">
+                <img src="/images/linkedin.svg" alt="LinkedIn" class="social-icon">
+            </button>
+            <button class="btn btn-outline-primary me-2" onclick="shareOnReddit()" aria-label="Share on Reddit">
+                <img src="/images/reddit.svg" alt="Reddit" class="social-icon">
+            </button>
+            <button class="btn btn-outline-primary me-2" onclick="shareOnWhatsApp()" aria-label="Share on WhatsApp">
+                <img src="/images/whatsapp.svg" alt="WhatsApp" class="social-icon">
+            </button>
+            <button class="btn btn-outline-primary me-2" onclick="shareOnTelegram()" aria-label="Share on Telegram">
+                <img src="/images/telegram.svg" alt="Telegram" class="social-icon">
+            </button>
+            <button class="btn btn-outline-primary" onclick="copyToClipboard()" aria-label="Copy to clipboard">
+                <img src="/images/clipboard.svg" alt="Copy" class="social-icon">
             </button>
         </div>
     </div>
@@ -115,6 +140,7 @@
         <footer id="footer">
             <ul class="copyright">
                 <li>&copy; Scottish Insults.</li>
+                <li><a href="/about">About</a></li>
             </ul>
         </footer>
 </body>

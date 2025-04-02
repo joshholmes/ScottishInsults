@@ -49,6 +49,19 @@ class InsultGenerator {
             const adjectivesData = await adjectivesRes.json();
             const nounsData = await nounsRes.json();
 
+            // Validate that the data has the expected structure
+            if (!sentencesData.sentences || !Array.isArray(sentencesData.sentences) || sentencesData.sentences.length === 0) {
+                throw new Error('Invalid sentences data format');
+            }
+            
+            if (!adjectivesData.adjectives || !Array.isArray(adjectivesData.adjectives) || adjectivesData.adjectives.length === 0) {
+                throw new Error('Invalid adjectives data format');
+            }
+            
+            if (!nounsData.nouns || !Array.isArray(nounsData.nouns) || nounsData.nouns.length === 0) {
+                throw new Error('Invalid nouns data format');
+            }
+
             this.sentences = sentencesData.sentences;
             this.adjectives = adjectivesData.adjectives;
             this.nouns = nounsData.nouns;
@@ -57,6 +70,15 @@ class InsultGenerator {
         } catch (error) {
             console.error('Error loading insult data:', error);
             document.getElementById('insults').textContent = 'Error loading insults. Please try again.';
+            
+            // Add a retry button
+            const insultsElement = document.getElementById('insults');
+            insultsElement.innerHTML = `
+                <div class="error-message">
+                    <p>Error loading insults. Please try again.</p>
+                    <button onclick="window.generator.loadData()" class="btn btn-sm btn-outline-primary">Retry</button>
+                </div>
+            `;
         }
     }
 
@@ -85,12 +107,24 @@ class InsultGenerator {
         // Store with pipe characters for the callback URL
         this.currentInsult = `${sentence}|${parts.adjective}|${parts.noun}!`;
         
+        // Check if we're on a mobile device
+        const isMobile = window.innerWidth <= 768;
+        
         // Display without pipe characters in the HTML
-        insultsElement.innerHTML = `
-            <span class="insult-part ${this.currentRotation.sentence < this.totalRotations.sentence ? 'rotating' : 'final'}">${sentence}</span>
-            <span class="insult-part ${this.currentRotation.adjective < this.totalRotations.adjective ? 'rotating' : 'final'}">${parts.adjective}</span>
-            <span class="insult-part ${this.currentRotation.noun < this.totalRotations.noun ? 'rotating' : 'final'}">${parts.noun}</span>!
-        `;
+        // On mobile, add line breaks between parts for better readability
+        if (isMobile) {
+            insultsElement.innerHTML = `
+                <span class="insult-part ${this.currentRotation.sentence < this.totalRotations.sentence ? 'rotating' : 'final'}">${sentence}</span>
+                <span class="insult-part ${this.currentRotation.adjective < this.totalRotations.adjective ? 'rotating' : 'final'}">${parts.adjective}</span>
+                <span class="insult-part ${this.currentRotation.noun < this.totalRotations.noun ? 'rotating' : 'final'}">${parts.noun}</span>!
+            `;
+        } else {
+            insultsElement.innerHTML = `
+                <span class="insult-part ${this.currentRotation.sentence < this.totalRotations.sentence ? 'rotating' : 'final'}">${sentence}</span>
+                <span class="insult-part ${this.currentRotation.adjective < this.totalRotations.adjective ? 'rotating' : 'final'}">${parts.adjective}</span>
+                <span class="insult-part ${this.currentRotation.noun < this.totalRotations.noun ? 'rotating' : 'final'}">${parts.noun}</span>!
+            `;
+        }
 
         if (isAllFinal) {
             insultsElement.classList.add('final');
@@ -162,7 +196,6 @@ class InsultGenerator {
     }
 
     updateSocialLinks(insult) {
-        // Use a hardcoded URL instead of process.env
         const mainUrl = 'https://scottishinsults.com';
         // Encode the insult text for the URL
         const encodedInsult = encodeURIComponent(insult);
@@ -173,6 +206,25 @@ class InsultGenerator {
         const shareText = `${displayInsult}\n\nView this insult at: ${callbackUrl}`;
         
         console.log('Share text:', shareText);
+
+        // Add platform-specific classes to the buttons
+        const twitterBtn = document.querySelector('button[aria-label="Share on Twitter"]');
+        const mastodonBtn = document.querySelector('button[aria-label="Share on Mastodon"]');
+        const blueskyBtn = document.querySelector('button[aria-label="Share on Bluesky"]');
+        const facebookBtn = document.querySelector('button[aria-label="Share on Facebook"]');
+        const linkedinBtn = document.querySelector('button[aria-label="Share on LinkedIn"]');
+        const redditBtn = document.querySelector('button[aria-label="Share on Reddit"]');
+        const whatsappBtn = document.querySelector('button[aria-label="Share on WhatsApp"]');
+        const telegramBtn = document.querySelector('button[aria-label="Share on Telegram"]');
+        
+        if (twitterBtn) twitterBtn.classList.add('twitter');
+        if (mastodonBtn) mastodonBtn.classList.add('mastodon');
+        if (blueskyBtn) blueskyBtn.classList.add('bluesky');
+        if (facebookBtn) facebookBtn.classList.add('facebook');
+        if (linkedinBtn) linkedinBtn.classList.add('linkedin');
+        if (redditBtn) redditBtn.classList.add('reddit');
+        if (whatsappBtn) whatsappBtn.classList.add('whatsapp');
+        if (telegramBtn) telegramBtn.classList.add('telegram');
 
         // Define the sharing functions directly on the window object
         window.shareOnTwitter = () => {
@@ -200,6 +252,58 @@ class InsultGenerator {
             const shareUrl = callbackUrl;
             const fbUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}&quote=${encodeURIComponent(shareText)}`;
             window.open(fbUrl, '_blank', 'width=626,height=436');
+        };
+        
+        // LinkedIn
+        window.shareOnLinkedIn = () => {
+            const linkedInText = encodeURIComponent(shareText);
+            const linkedInUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(callbackUrl)}&summary=${linkedInText}`;
+            window.open(linkedInUrl, '_blank', 'width=600,height=600');
+        };
+        
+        // Reddit
+        window.shareOnReddit = () => {
+            const redditText = encodeURIComponent(shareText);
+            const redditUrl = `https://www.reddit.com/submit?url=${encodeURIComponent(callbackUrl)}&title=${redditText}`;
+            window.open(redditUrl, '_blank', 'width=600,height=600');
+        };
+        
+        // WhatsApp
+        window.shareOnWhatsApp = () => {
+            const whatsappText = encodeURIComponent(shareText);
+            const whatsappUrl = `https://wa.me/?text=${whatsappText}`;
+            window.open(whatsappUrl, '_blank', 'width=600,height=600');
+        };
+        
+        // Telegram
+        window.shareOnTelegram = () => {
+            const telegramText = encodeURIComponent(shareText);
+            const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(callbackUrl)}&text=${telegramText}`;
+            window.open(telegramUrl, '_blank', 'width=600,height=600');
+        };
+        
+        // Copy to Clipboard
+        window.copyToClipboard = () => {
+            navigator.clipboard.writeText(shareText)
+                .then(() => {
+                    // Show a temporary success message
+                    const copyButton = document.querySelector('button[aria-label="Copy to clipboard"]');
+                    const originalHTML = copyButton.innerHTML;
+                    
+                    copyButton.innerHTML = '<img src="/images/check.svg" alt="Copied" class="social-icon">';
+                    copyButton.classList.add('btn-success');
+                    copyButton.classList.remove('btn-outline-primary');
+                    
+                    setTimeout(() => {
+                        copyButton.innerHTML = originalHTML;
+                        copyButton.classList.remove('btn-success');
+                        copyButton.classList.add('btn-outline-primary');
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    alert('Failed to copy to clipboard. Please try again.');
+                });
         };
     }
 
@@ -263,6 +367,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.log('Generate button clicked');
         generator.generateInsult();
     });
+    
+    // Add window resize event listener to update display on screen size changes
+    window.addEventListener('resize', () => {
+        if (generator.currentInsult) {
+            // Re-display the current insult with appropriate formatting for the new screen size
+            const cleanText = generator.currentInsult.endsWith('!') ? generator.currentInsult.slice(0, -1) : generator.currentInsult;
+            const [sentence, adjective, noun] = cleanText.split('|');
+            
+            const insultsElement = document.getElementById('insults');
+            insultsElement.innerHTML = `
+                <span class="insult-part final">${sentence}</span>
+                <span class="insult-part final">${adjective}</span>
+                <span class="insult-part final">${noun}</span>!
+            `;
+            insultsElement.classList.add('final');
+        }
+    });
 
     // Load the data and generate initial insult
     await generator.loadData();
@@ -284,6 +405,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             // Parse the insult parts
             const cleanText = decodedInsult.endsWith('!') ? decodedInsult.slice(0, -1) : decodedInsult;
             const [sentence, adjective, noun] = cleanText.split('|');
+            
+            // Check if we're on a mobile device
+            const isMobile = window.innerWidth <= 768;
             
             // Display the specific insult with proper formatting
             const insultsElement = document.getElementById('insults');

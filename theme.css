@@ -118,6 +118,7 @@ body::before {
     align-items: center;
     justify-content: center;
     transition: all 0.4s ease;
+    flex-wrap: wrap;
 }
 
 #final-insult {
@@ -305,6 +306,14 @@ body::before {
     #insults, #final-insult {
         font-size: 1.4rem;
         padding: 1rem;
+        flex-direction: column;
+        min-height: 120px;
+    }
+    
+    .insult-part {
+        margin: 5px 0;
+        width: 100%;
+        text-align: center;
     }
 
     .social-share-buttons {
