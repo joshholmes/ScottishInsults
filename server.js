@@ -38,6 +38,11 @@ app.get('/about', function(req, res) {
     res.sendFile(path.join(__dirname, 'about.html'));
 });
 
+// Handle donate page
+app.get('/donate', function(req, res) {
+    res.sendFile(path.join(__dirname, 'donate.html'));
+});
+
 // Catch-all route to handle any other paths
 app.get('*', function(req, res) {
     // For any other route, send the main page

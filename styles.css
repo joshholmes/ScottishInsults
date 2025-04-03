@@ -281,4 +281,145 @@
         width: 20px;
         height: 20px;
     }
+}
+
+/* Donation page styles */
+.donation-options {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.donation-option {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.donation-option h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.donation-option p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.payment-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.donation-button .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.donation-form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.donation-form .form-control {
+    padding: 12px;
+    font-size: 16px;
+}
+
+.donation-form .btn {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.thank-you-message {
+    text-align: center;
+    margin-top: 30px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+}
+
+.thank-you-message p {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+}
+
+/* Mobile responsiveness for donation page */
+@media (max-width: 768px) {
+    .donation-option {
+        padding: 15px;
+    }
+
+    .donation-button .btn {
+        width: 100%;
+    }
+
+    .payment-icon {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+.about-me {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.about-me h2 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    font-family: 'Playfair Display', serif;
+}
+
+.about-me p {
+    color: #666;
+    margin-bottom: 15px;
+    font-size: 1.1em;
+    line-height: 1.6;
+}
+
+.about-me .bio {
+    font-style: italic;
+    color: #4a4a4a;
+    opacity: 0.9;
+}
+
+.about-me a {
+    color: #4a4a4a;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 600;
+}
+
+.about-me a:hover {
+    color: #666;
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .about-me {
+        padding: 15px;
+        margin-top: 15px;
+    }
+    
+    .about-me h2 {
+        font-size: 1.3rem;
+    }
+    
+    .about-me p {
+        font-size: 1em;
+    }
 } 
