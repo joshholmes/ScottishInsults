@@ -1,30 +1,108 @@
 {
   "sentences": [
-    "Don't be a",
-    "Such a",
-    "Leave it out ye",
-    "Yer ma calls ye a",
-    "Away with ye, ya",
-    "A face like a",
-    "Ye right",
-    "Ye are a",
-    "You're such a",
-    "Out yer arse ye",
-    "Awa' an bile yer heid ya",
-    "Yer da sells Avon ya",
-    "Haud yer wheesht ya",
-    "Get tae fuck ya",
-    "Yer bum's oot the windae ya",
-    "Whit ye lookin at ya",
-    "Yer aff yer heid ya",
-    "Awa' n shite ya",
-    "Yer talkin mince ya",
-    "Yer haverin like a",
-    "Yer face looks like a melted",
-    "Yer about as useful as a",
-    "Yer mair mooth than",
-    "Yer aboot as sharp as a",
-    "Yer the type ay", 
-    "Ye daft wee"
+    {
+      "text": "Don't be a",
+      "translation": "Don't be a"
+    },
+    {
+      "text": "Such a",
+      "translation": "Such a"
+    },
+    {
+      "text": "Leave it out ye",
+      "translation": "Stop it, you"
+    },
+    {
+      "text": "Yer ma calls ye a",
+      "translation": "Your mother calls you a"
+    },
+    {
+      "text": "Away with ye, ya",
+      "translation": "Get away from here, you"
+    },
+    {
+      "text": "A face like a",
+      "translation": "A face like a"
+    },
+    {
+      "text": "Ye right",
+      "translation": "You're right"
+    },
+    {
+      "text": "Ye are a",
+      "translation": "You are a"
+    },
+    {
+      "text": "You're such a",
+      "translation": "You're such a"
+    },
+    {
+      "text": "Out yer arse ye",
+      "translation": "Out of your backside, you"
+    },
+    {
+      "text": "Awa' an bile yer heid ya",
+      "translation": "Away and boil your head, you"
+    },
+    {
+      "text": "Yer da sells Avon ya",
+      "translation": "Your father sells Avon, you"
+    },
+    {
+      "text": "Haud yer wheesht ya",
+      "translation": "Hold your silence, you"
+    },
+    {
+      "text": "Get tae fuck ya",
+      "translation": "Get to hell, you"
+    },
+    {
+      "text": "Yer bum's oot the windae ya",
+      "translation": "Your backside is out the window, you"
+    },
+    {
+      "text": "Whit ye lookin at ya",
+      "translation": "What are you looking at, you"
+    },
+    {
+      "text": "Yer aff yer heid ya",
+      "translation": "You're off your head, you"
+    },
+    {
+      "text": "Awa' n shite ya",
+      "translation": "Away and defecate, you"
+    },
+    {
+      "text": "Yer talkin mince ya",
+      "translation": "You're talking nonsense, you"
+    },
+    {
+      "text": "Yer haverin like a",
+      "translation": "You're acting like a"
+    },
+    {
+      "text": "Yer face looks like a melted",
+      "translation": "Your face looks like a melted"
+    },
+    {
+      "text": "Yer about as useful as a",
+      "translation": "You're as useful as a"
+    },
+    {
+      "text": "Yer mair mooth than",
+      "translation": "You're more smooth than"
+    },
+    {
+      "text": "Yer aboot as sharp as a",
+      "translation": "You're about as sharp as a"
+    },
+    {
+      "text": "Yer the type ay",
+      "translation": "You're the type of"
+    },
+    {
+      "text": "Ye daft wee",
+      "translation": "You're a stupid little"
+    }
   ]
 } 

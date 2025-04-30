@@ -81,13 +81,15 @@
     <header id="header">
     <h1>Scottish Insults</h1>
     <p>
-        When you're lacking the phrase for the situation - turn to the Scottish for inspiration...
+        When you're lacking the phrase for the situation - turn to the Scottish for inspiration... :)
     </p>
 </header>
 <div class="container body-content">
     <div class="jumbotron">
         <h1 class="text-center mb-4">Scottish Insult Generator</h1>
-        <div id="insults" class="insult-container"></div>
+        <div id="insults" class="insult-container" aria-live="polite" aria-atomic="true">
+            <span class="insult-text"></span>
+        </div>
         <div class="button-group mt-4">
             <button id="generateBtn" class="btn btn-primary me-2" aria-label="Generate a new Scottish insult">
                 Next slag!

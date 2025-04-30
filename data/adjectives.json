@@ -1,35 +1,128 @@
 {
   "adjectives": [
-    "nuclear",
-    "wee",
-    "weapons-grade",
-    "muddy",
-    "fucking witless",
-    "proper",
-    "bloviated",
-    "ludicrous",
-    "weaselheaded",
-    "yellae",
-    "dobby",
-    "steamin",
-    "witless",
-    "carnaptious",
-    "polyester",
-    "smashed",
-    "bloody",
-    "incompressible",
-    "cocked",
-    "manky",
-    "wiggy",
-    "bloomin",
-    "bampot",
-    "bawheid",
-    "bawjaws",
-    "bawface",
-    "bawbag",
-    "glaikit",
-    "scunnered",
-    "scunnering",
-    "scunner"
+    {
+      "text": "nuclear",
+      "translation": "nuclear"
+    },
+    {
+      "text": "wee",
+      "translation": "small"
+    },
+    {
+      "text": "weapons-grade",
+      "translation": "weapons-grade"
+    },
+    {
+      "text": "muddy",
+      "translation": "muddy"
+    },
+    {
+      "text": "fucking witless",
+      "translation": "completely stupid"
+    },
+    {
+      "text": "proper",
+      "translation": "proper"
+    },
+    {
+      "text": "bloviated",
+      "translation": "pompous"
+    },
+    {
+      "text": "ludicrous",
+      "translation": "ludicrous"
+    },
+    {
+      "text": "weaselheaded",
+      "translation": "weasel-headed"
+    },
+    {
+      "text": "yellae",
+      "translation": "yellow"
+    },
+    {
+      "text": "dobby",
+      "translation": "stupid"
+    },
+    {
+      "text": "steamin",
+      "translation": "steaming"
+    },
+    {
+      "text": "witless",
+      "translation": "stupid"
+    },
+    {
+      "text": "carnaptious",
+      "translation": "quarrelsome"
+    },
+    {
+      "text": "polyester",
+      "translation": "polyester"
+    },
+    {
+      "text": "smashed",
+      "translation": "smashed"
+    },
+    {
+      "text": "bloody",
+      "translation": "bloody"
+    },
+    {
+      "text": "incompressible",
+      "translation": "incompressible"
+    },
+    {
+      "text": "cocked",
+      "translation": "messed up"
+    },
+    {
+      "text": "manky",
+      "translation": "dirty"
+    },
+    {
+      "text": "wiggy",
+      "translation": "crazy"
+    },
+    {
+      "text": "bloomin",
+      "translation": "blooming"
+    },
+    {
+      "text": "bampot",
+      "translation": "foolish"
+    },
+    {
+      "text": "bawheid",
+      "translation": "stupid head"
+    },
+    {
+      "text": "bawjaws",
+      "translation": "idiot"
+    },
+    {
+      "text": "bawface",
+      "translation": "ugly face"
+    },
+    {
+      "text": "bawbag",
+      "translation": "scrotum"
+    },
+    {
+      "text": "glaikit",
+      "translation": "stupid/foolish"
+    },
+    {
+      "text": "scunnered",
+      "translation": "disgusted/fed up"
+    },
+    {
+      "text": "scunnering",
+      "translation": "disgusting"
+    },
+    {
+      "text": "scunner",
+      "translation": "nuisance/annoyance"
+    }
   ]
 } 

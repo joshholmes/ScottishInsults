@@ -30,6 +30,9 @@ class InsultGenerator {
         this.speechManager = new SpeechManager();
         // Make the generator available globally for the voice button
         window.generator = this;
+        this.translations = null;
+        // Add aria-live region for screen reader announcements
+        this.createAriaLiveRegion();
     }
 
     async loadData() {
@@ -41,9 +44,10 @@ class InsultGenerator {
                 fetch('/data/nouns.json')
             ]);
 
-            if (!sentencesRes.ok || !adjectivesRes.ok || !nounsRes.ok) {
-                throw new Error('Failed to load data files');
-            }
+            // Check if any of the responses failed
+            if (!sentencesRes.ok) throw new Error(`Failed to load sentences.json: ${sentencesRes.status}`);
+            if (!adjectivesRes.ok) throw new Error(`Failed to load adjectives.json: ${adjectivesRes.status}`);
+            if (!nounsRes.ok) throw new Error(`Failed to load nouns.json: ${nounsRes.status}`);
 
             const sentencesData = await sentencesRes.json();
             const adjectivesData = await adjectivesRes.json();
@@ -67,15 +71,23 @@ class InsultGenerator {
             this.nouns = nounsData.nouns;
             this.loaded = true;
             console.log('Data loaded successfully');
+            
+            // Clear any error messages and initialize the first insult
+            const insultsElement = document.getElementById('insults');
+            insultsElement.innerHTML = `
+                <span class="insult-part" id="sentence-part"></span>
+                <span class="insult-part" id="adjective-part"></span>
+                <span class="insult-part" id="noun-part"></span>
+            `;
+            this.generateInsult();
         } catch (error) {
             console.error('Error loading insult data:', error);
-            document.getElementById('insults').textContent = 'Error loading insults. Please try again.';
             
-            // Add a retry button
+            // Add a retry button with more detailed error information
             const insultsElement = document.getElementById('insults');
             insultsElement.innerHTML = `
                 <div class="error-message">
-                    <p>Error loading insults. Please try again.</p>
+                    <p>Error loading insults: ${error.message}</p>
                     <button onclick="window.generator.loadData()" class="btn btn-sm btn-outline-primary">Retry</button>
                 </div>
             `;
@@ -87,112 +99,85 @@ class InsultGenerator {
     }
 
     generateRandomInsult() {
+        const randomSentence = this.getRandomFromArray(this.sentences);
+        const randomAdjective = this.getRandomFromArray(this.adjectives);
+        const randomNoun = this.getRandomFromArray(this.nouns);
+
         return {
-            sentence: this.getRandomFromArray(this.sentences),
-            adjective: this.getRandomFromArray(this.adjectives),
-            noun: this.getRandomFromArray(this.nouns)
+            sentence: randomSentence,
+            adjective: randomAdjective,
+            noun: randomNoun
         };
     }
 
-    updateDisplay(parts) {
-        const insultsElement = document.getElementById('insults');
-        const isAllFinal = this.currentRotation.sentence >= this.totalRotations.sentence &&
-                          this.currentRotation.adjective >= this.totalRotations.adjective &&
-                          this.currentRotation.noun >= this.totalRotations.noun;
+    updateDisplay(parts, isAnimating = false) {
+        const insultsContainer = document.getElementById('insults');
+        if (!insultsContainer) return;
 
-        // Remove any trailing spaces from the sentence part
-        const sentence = parts.sentence.trim();
-        
-        // Update the current insult to match what's being displayed
-        // Store with pipe characters for the callback URL
-        this.currentInsult = `${sentence}|${parts.adjective}|${parts.noun}!`;
-        
-        // Check if we're on a mobile device
-        const isMobile = window.innerWidth <= 768;
-        
-        // Display without pipe characters in the HTML
-        // On mobile, add line breaks between parts for better readability
-        if (isMobile) {
-            insultsElement.innerHTML = `
-                <span class="insult-part ${this.currentRotation.sentence < this.totalRotations.sentence ? 'rotating' : 'final'}">${sentence}</span>
-                <span class="insult-part ${this.currentRotation.adjective < this.totalRotations.adjective ? 'rotating' : 'final'}">${parts.adjective}</span>
-                <span class="insult-part ${this.currentRotation.noun < this.totalRotations.noun ? 'rotating' : 'final'}">${parts.noun}</span>!
-            `;
-        } else {
-            insultsElement.innerHTML = `
-                <span class="insult-part ${this.currentRotation.sentence < this.totalRotations.sentence ? 'rotating' : 'final'}">${sentence}</span>
-                <span class="insult-part ${this.currentRotation.adjective < this.totalRotations.adjective ? 'rotating' : 'final'}">${parts.adjective}</span>
-                <span class="insult-part ${this.currentRotation.noun < this.totalRotations.noun ? 'rotating' : 'final'}">${parts.noun}</span>!
-            `;
+        // Get the text content for each part
+        const sentenceText = typeof parts.sentence === 'object' ? parts.sentence.text : parts.sentence;
+        const adjectiveText = typeof parts.adjective === 'object' ? parts.adjective.text : parts.adjective;
+        const nounText = typeof parts.noun === 'object' ? parts.noun.text : parts.noun;
+
+        // Create the complete insult text
+        const insultText = `${sentenceText} ${adjectiveText} ${nounText}`;
+
+        // Create the translation text (only for final display, not during animation)
+        if (!isAnimating) {
+            const sentenceTrans = typeof parts.sentence === 'object' ? parts.sentence.translation : parts.sentence;
+            const adjectiveTrans = typeof parts.adjective === 'object' ? parts.adjective.translation : parts.adjective;
+            const nounTrans = typeof parts.noun === 'object' ? parts.noun.translation : parts.noun;
+            const translationText = `${sentenceTrans} ${adjectiveTrans} ${nounTrans}`;
+            
+            insultsContainer.setAttribute('data-translation', translationText);
         }
 
-        if (isAllFinal) {
-            insultsElement.classList.add('final');
-        } else {
-            insultsElement.classList.remove('final');
-        }
+        // Update the display
+        insultsContainer.innerHTML = `<span class="insult-text">${insultText}</span>`;
+        
+        // Store current insult
+        this.currentInsult = insultText;
+
+        // Announce to screen readers
+        this.announceToScreenReader(insultText);
     }
 
     generateInsult() {
-        if (!this.loaded) {
-            console.log('Data not loaded yet');
-            return "Loading insults...";
-        }
+        if (!this.loaded || this.isAnimating) return;
 
-        if (this.isAnimating) {
-            console.log('Already animating');
-            return;
-        }
-
-        console.log('Generating new insult');
         this.isAnimating = true;
-        this.currentRotation = { sentence: 0, adjective: 0, noun: 0 };
         const insultsElement = document.getElementById('insults');
         insultsElement.classList.add('rotating');
-        insultsElement.classList.remove('final');
-        insultsElement.style.display = 'flex';
+        
+        // Keep track of animation frames
+        let frames = 0;
+        const totalFrames = 30; // Total number of animation frames
+        const animationDuration = 2000; // Total animation duration in ms
+        const frameInterval = animationDuration / totalFrames;
 
-        // Generate the final insult that we'll settle on
-        this.finalParts = this.generateRandomInsult();
-
-        // Start the rotation animation for each part
-        const animatePart = (part, speed, totalRotations) => {
-            if (this.currentRotation[part] >= totalRotations) {
+        const animate = () => {
+            if (frames >= totalFrames) {
+                // Final state
+                this.isAnimating = false;
+                insultsElement.classList.remove('rotating');
+                this.updateDisplay(this.finalParts);
+                this.updateSocialLinks(this.currentInsult);
                 return;
             }
 
+            // Generate random parts for animation
             const randomParts = this.generateRandomInsult();
-            const displayParts = {
-                sentence: part === 'sentence' ? randomParts.sentence : this.finalParts.sentence,
-                adjective: part === 'adjective' ? randomParts.adjective : this.finalParts.adjective,
-                noun: part === 'noun' ? randomParts.noun : this.finalParts.noun
-            };
+            this.updateDisplay(randomParts, true);
 
-            this.updateDisplay(displayParts);
-            this.currentRotation[part]++;
-            setTimeout(() => animatePart(part, speed, totalRotations), speed);
+            frames++;
+            setTimeout(animate, frameInterval);
         };
 
-        // Start all animations
-        animatePart('sentence', this.animationSpeed.sentence, this.totalRotations.sentence);
-        animatePart('adjective', this.animationSpeed.adjective, this.totalRotations.adjective);
-        animatePart('noun', this.animationSpeed.noun, this.totalRotations.noun);
-
-        // Set a timeout to update social links when all animations are complete
-        const maxDuration = Math.max(
-            this.animationSpeed.sentence * this.totalRotations.sentence,
-            this.animationSpeed.adjective * this.totalRotations.adjective,
-            this.animationSpeed.noun * this.totalRotations.noun
-        );
-
-        setTimeout(() => {
-            this.isAnimating = false;
-            insultsElement.classList.remove('rotating');
-            // Update display one final time to ensure currentInsult matches
-            this.updateDisplay(this.finalParts);
-            this.updateSocialLinks(this.currentInsult);
-            console.log('Animation complete, final insult:', this.currentInsult);
-        }, maxDuration + 500); // Add 500ms buffer
+        // Store the final insult we'll end with
+        this.finalParts = this.generateRandomInsult();
+        
+        // Start animation
+        animate();
     }
 
     updateSocialLinks(insult) {
@@ -308,24 +293,32 @@ class InsultGenerator {
     }
 
     speakCurrentInsult() {
-        if (this.isAnimating) {
-            console.log('Cannot speak while generating new insult');
-            return;
-        }
-        
         if (!this.currentInsult) {
             console.log('No insult to speak');
             return;
         }
 
-        // Format the text properly for speech
-        const formattedText = this.currentInsult
-            .replace(/\|/g, ' ')  // Replace pipe characters with spaces
-            .replace(/\s+/g, ' ')  // Replace multiple spaces with single space
-            .trim();              // Remove leading/trailing spaces
+        // Check if speechManager exists
+        if (!this.speechManager) {
+            console.log('Speech manager not initialized');
+            return;
+        }
 
-        console.log('Speaking current insult:', formattedText);
-        this.speechManager.speak(formattedText);
+        try {
+            // Get the current text content from the DOM elements
+            const sentencePart = document.getElementById('sentence-part');
+            const adjectivePart = document.getElementById('adjective-part');
+            const nounPart = document.getElementById('noun-part');
+
+            if (sentencePart && adjectivePart && nounPart) {
+                const textToSpeak = `${sentencePart.textContent} ${adjectivePart.textContent} ${nounPart.textContent}`;
+                this.speechManager.speak(textToSpeak);
+            } else {
+                console.log('Could not find insult elements');
+            }
+        } catch (error) {
+            console.error('Error speaking insult:', error);
+        }
     }
 
     // Add this new method to validate if an insult could be generated from our data
@@ -347,6 +340,50 @@ class InsultGenerator {
             this.adjectives.includes(adjective) &&
             this.nouns.includes(noun)
         );
+    }
+
+    // Add this method to create the aria-live region
+    createAriaLiveRegion() {
+        // Remove any existing aria-live region
+        const existingRegion = document.getElementById('aria-live-region');
+        if (existingRegion) {
+            existingRegion.remove();
+        }
+
+        // Create new aria-live region
+        const ariaLiveRegion = document.createElement('div');
+        ariaLiveRegion.id = 'aria-live-region';
+        ariaLiveRegion.className = 'sr-only';
+        ariaLiveRegion.setAttribute('aria-live', 'polite');
+        ariaLiveRegion.setAttribute('aria-atomic', 'true');
+        document.body.appendChild(ariaLiveRegion);
+    }
+
+    // Add this method for screen reader announcements
+    announceToScreenReader(text) {
+        const ariaLiveRegion = document.getElementById('aria-live-region');
+        if (ariaLiveRegion) {
+            ariaLiveRegion.textContent = text;
+        }
+    }
+
+    // Add CSS for screen reader only content
+    addScreenReaderCSS() {
+        const style = document.createElement('style');
+        style.textContent = `
+            .sr-only {
+                position: absolute;
+                width: 1px;
+                height: 1px;
+                padding: 0;
+                margin: -1px;
+                overflow: hidden;
+                clip: rect(0, 0, 0, 0);
+                white-space: nowrap;
+                border: 0;
+            }
+        `;
+        document.head.appendChild(style);
     }
 }
 
@@ -439,4 +476,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     } catch (e) {
         console.error('Error initializing AdSense:', e);
     }
+
+    generator.addScreenReaderCSS();
 }); 

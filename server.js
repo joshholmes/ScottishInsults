@@ -26,6 +26,17 @@ app.get('/data/*.json', function(req, res, next) {
     next();
 });
 
+// Add specific routes for JSON files
+app.get('/data/:file', function(req, res) {
+    const filePath = path.join(__dirname, 'data', req.params.file);
+    if (fs.existsSync(filePath) && filePath.endsWith('.json')) {
+        res.setHeader('Content-Type', 'application/json');
+        res.sendFile(filePath);
+    } else {
+        res.status(404).send('File not found');
+    }
+});
+
 // Handle insult callback URLs
 app.get('/insult', function(req, res) {
     // Send the main page
