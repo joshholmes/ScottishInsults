@@ -1,0 +1,30 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+    
+    # Allow direct access to actual files
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+    
+    # Handle /about route
+    RewriteRule ^about$ about.html [L]
+    
+    # Handle /donate route
+    RewriteRule ^donate$ donate.html [L]
+    
+    # Handle /insult route
+    RewriteRule ^insult$ index.html [L]
+    
+    # Rewrite all other URLs to index.html
+    RewriteRule ^ index.html [L]
+</IfModule>
+
+# Set proper MIME types
+AddType application/json .json
+AddType image/svg+xml .svg
+
+# Enable CORS
+Header set Access-Control-Allow-Origin "*"
+Header set Access-Control-Allow-Methods "GET, POST, OPTIONS"
+Header set Access-Control-Allow-Headers "Content-Type" 
