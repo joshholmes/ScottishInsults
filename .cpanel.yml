@@ -1,0 +1,19 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/scotpwsw/public_html/
+    - /bin/cp -R data $DEPLOYPATH
+    - /bin/cp -R images $DEPLOYPATH
+    - /bin/cp index.html $DEPLOYPATH
+    - /bin/cp about.html $DEPLOYPATH
+    - /bin/cp donate.html $DEPLOYPATH
+    - /bin/cp insultGenerator.js $DEPLOYPATH
+    - /bin/cp speech.js $DEPLOYPATH
+    - /bin/cp styles.css $DEPLOYPATH
+    - /bin/cp theme.css $DEPLOYPATH
+    - /bin/cp site.webmanifest $DEPLOYPATH
+    - /bin/cp favicon.ico $DEPLOYPATH
+    - /bin/cp package.json $DEPLOYPATH
+    - /bin/cp server.js $DEPLOYPATH
+    - /bin/cp web.config $DEPLOYPATH
+    - /bin/cp .env $DEPLOYPATH 
