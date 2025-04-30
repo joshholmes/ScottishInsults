@@ -89,38 +89,51 @@
         <h1 class="text-center mb-4">Scottish Insult Generator</h1>
         <div id="insults" class="insult-container"></div>
         <div class="button-group mt-4">
-            <button id="generateBtn" class="btn btn-primary me-2" aria-label="Generate a new Scottish insult">Next slag!</button>
+            <button id="generateBtn" class="btn btn-primary me-2" aria-label="Generate a new Scottish insult">
+                Next slag!
+                <span class="tooltip">Click to summon the Scottish Insult gods and create your next masterpiece of verbal abuse!</span>
+            </button>
             <button id="voiceBtn" class="btn btn-outline-primary" onclick="window.generator.speakCurrentInsult()" aria-label="Speak the current insult">
-                <img src="/images/speakingboy.svg" alt="Speak" class="social-icon">
+                <img src="/images/speakingboy.svg" alt="" class="social-icon" aria-hidden="true">
+                <span class="tooltip">How do I attempt to pronounce this?</span>
             </button>
         </div>
         <div class="social-share mt-4">
             <button class="btn btn-outline-primary me-2" onclick="shareOnTwitter()" aria-label="Share on Twitter">
-                <img src="/images/twitter.svg" alt="Twitter" class="social-icon">
+                <img src="/images/twitter.svg" alt="" class="social-icon" aria-hidden="true">
+                <span class="tooltip">Share on Twitter</span>
             </button>
             <button class="btn btn-outline-primary me-2" onclick="shareOnMastodon()" aria-label="Share on Mastodon">
-                <img src="/images/mastodon.svg" alt="Mastodon" class="social-icon">
+                <img src="/images/mastodon.svg" alt="" class="social-icon" aria-hidden="true">
+                <span class="tooltip">Share on Mastodon</span>
             </button>
             <button class="btn btn-outline-primary me-2" onclick="shareOnBluesky()" aria-label="Share on Bluesky">
-                <img src="/images/bluesky.svg" alt="Bluesky" class="social-icon">
+                <img src="/images/bluesky.svg" alt="" class="social-icon" aria-hidden="true">
+                <span class="tooltip">Share on Bluesky</span>
             </button>
             <button class="btn btn-outline-primary me-2" onclick="shareOnFacebook()" aria-label="Share on Facebook">
-                <img src="/images/facebook.svg" alt="Facebook" class="social-icon">
+                <img src="/images/facebook.svg" alt="" class="social-icon" aria-hidden="true">
+                <span class="tooltip">Share on Facebook</span>
             </button>
             <button class="btn btn-outline-primary me-2" onclick="shareOnLinkedIn()" aria-label="Share on LinkedIn">
-                <img src="/images/linkedin.svg" alt="LinkedIn" class="social-icon">
+                <img src="/images/linkedin.svg" alt="" class="social-icon" aria-hidden="true">
+                <span class="tooltip">Share on LinkedIn</span>
             </button>
             <button class="btn btn-outline-primary me-2" onclick="shareOnReddit()" aria-label="Share on Reddit">
-                <img src="/images/reddit.svg" alt="Reddit" class="social-icon">
+                <img src="/images/reddit.svg" alt="" class="social-icon" aria-hidden="true">
+                <span class="tooltip">Share on Reddit</span>
             </button>
             <button class="btn btn-outline-primary me-2" onclick="shareOnWhatsApp()" aria-label="Share on WhatsApp">
-                <img src="/images/whatsapp.svg" alt="WhatsApp" class="social-icon">
+                <img src="/images/whatsapp.svg" alt="" class="social-icon" aria-hidden="true">
+                <span class="tooltip">Share on WhatsApp</span>
             </button>
             <button class="btn btn-outline-primary me-2" onclick="shareOnTelegram()" aria-label="Share on Telegram">
-                <img src="/images/telegram.svg" alt="Telegram" class="social-icon">
+                <img src="/images/telegram.svg" alt="" class="social-icon" aria-hidden="true">
+                <span class="tooltip">Share on Telegram</span>
             </button>
             <button class="btn btn-outline-primary" onclick="copyToClipboard()" aria-label="Copy to clipboard">
-                <img src="/images/clipboard.svg" alt="Copy" class="social-icon">
+                <img src="/images/clipboard.svg" alt="" class="social-icon" aria-hidden="true">
+                <span class="tooltip">Copy to clipboard</span>
             </button>
         </div>
     </div>
