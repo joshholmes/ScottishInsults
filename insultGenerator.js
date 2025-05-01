@@ -184,7 +184,7 @@ class InsultGenerator {
         const mainUrl = 'https://scottishinsults.com';
         // Encode the insult text for the URL
         const encodedInsult = encodeURIComponent(insult);
-        const callbackUrl = `${mainUrl}/insult?text=${encodedInsult}`;
+        const callbackUrl = `${mainUrl}/insult.html?text=${encodedInsult}`;
         
         // Create a display version of the insult without pipe characters
         const displayInsult = insult.replace(/\|/g, ' ');
