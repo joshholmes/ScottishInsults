@@ -1,19 +1,28 @@
-Options -MultiViews
+Options +FollowSymLinks -MultiViews
 RewriteEngine On
 RewriteBase /
 
-# Handle direct file access
-RewriteCond %{REQUEST_FILENAME} !-f
+# If the requested filename is not a directory,
+# and the filename is not a file,
+# and the request doesn't end in .html
 RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_URI} !\.html$
 
-# Remove .html extension
+# Check if the .html version exists
 RewriteCond %{REQUEST_FILENAME}.html -f
+
+# Internally rewrite to the .html version
 RewriteRule ^(.+)$ $1.html [L]
 
+# Redirect any direct .html access to clean URL
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s([^.]+)\.html [NC]
+RewriteRule ^ %1 [R=301,L]
+
 # Handle specific routes
-RewriteRule ^about/?$ about.html [L]
-RewriteRule ^donate/?$ donate.html [L]
-RewriteRule ^insult/?$ index.html [L]
+RewriteRule ^about/?$ about.html [L,NC]
+RewriteRule ^donate/?$ donate.html [L,NC]
+RewriteRule ^insult/?$ index.html [L,NC]
 
 # Set proper MIME types
 AddType application/json .json
