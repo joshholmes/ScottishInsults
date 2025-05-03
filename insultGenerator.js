@@ -184,7 +184,7 @@ class InsultGenerator {
         const mainUrl = 'https://scottishinsults.com';
         // Encode the insult text for the URL
         const encodedInsult = encodeURIComponent(insult);
-        const callbackUrl = `${mainUrl}/insult.html?text=${encodedInsult}`;
+        const callbackUrl = `${mainUrl}/insult?text=${encodedInsult}`;
         
         // Create a display version of the insult without pipe characters
         const displayInsult = insult.replace(/\|/g, ' ');
@@ -305,17 +305,8 @@ class InsultGenerator {
         }
 
         try {
-            // Get the current text content from the DOM elements
-            const sentencePart = document.getElementById('sentence-part');
-            const adjectivePart = document.getElementById('adjective-part');
-            const nounPart = document.getElementById('noun-part');
-
-            if (sentencePart && adjectivePart && nounPart) {
-                const textToSpeak = `${sentencePart.textContent} ${adjectivePart.textContent} ${nounPart.textContent}`;
-                this.speechManager.speak(textToSpeak);
-            } else {
-                console.log('Could not find insult elements');
-            }
+            // Use the currentInsult directly
+            this.speechManager.speak(this.currentInsult);
         } catch (error) {
             console.error('Error speaking insult:', error);
         }

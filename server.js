@@ -35,7 +35,19 @@ Object.entries(routes).forEach(([route, file]) => {
 });
 
 // Catch-all route
-app.get('*', function(req, res) {
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+app.get('/about', (req, res) => {
+    res.sendFile(path.join(__dirname, 'about.html'));
+});
+
+app.get('/donate', (req, res) => {
+    res.sendFile(path.join(__dirname, 'donate.html'));
+});
+
+app.get('/insult', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
