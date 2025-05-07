@@ -11,6 +11,23 @@ app.use(function(req, res, next) {
     next();
 });
 
+// Define routes
+const routes = {
+    '/': 'index.html',
+    '/about': 'about.html',
+    '/donate': 'donate.html',
+    '/privacy': 'privacy.html',
+    '/terms': 'terms.html',
+    '/insult': 'insult.html'
+};
+
+// Handle specific routes first
+Object.entries(routes).forEach(([route, file]) => {
+    app.get(route, (req, res) => {
+        res.sendFile(path.join(__dirname, file));
+    });
+});
+
 // Serve static files from the root directory
 app.use(express.static(path.join(__dirname)));
 
@@ -20,35 +37,9 @@ app.get('/data/*.json', function(req, res, next) {
     next();
 });
 
-// Handle routes
-const routes = {
-    '/about': 'about.html',
-    '/donate': 'donate.html',
-    '/insult': 'index.html'
-};
-
-// Handle specific routes
-Object.entries(routes).forEach(([route, file]) => {
-    app.get(route, function(req, res) {
-        res.sendFile(path.join(__dirname, file));
-    });
-});
-
-// Catch-all route
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-app.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, 'about.html'));
-});
-
-app.get('/donate', (req, res) => {
-    res.sendFile(path.join(__dirname, 'donate.html'));
-});
-
-app.get('/insult', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+// Handle 404 for unknown routes
+app.use((req, res) => {
+    res.status(404).sendFile(path.join(__dirname, '404.html'));
 });
 
 // Error handling middleware
