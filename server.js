@@ -18,7 +18,11 @@ const routes = {
     '/donate': 'donate.html',
     '/privacy': 'privacy.html',
     '/terms': 'terms.html',
-    '/insult': 'insult.html'
+    '/blog': 'blog/index.html',
+    '/blog/top-10-scottish-insults-work': 'blog/top-10-scottish-insults-work.html',
+    '/blog/scottish-swearing-etiquette': 'blog/scottish-swearing-etiquette.html',
+    '/blog/history-scottish-slang': 'blog/history-scottish-slang.html',
+    '/blog/is-bawbag-offensive': 'blog/is-bawbag-offensive.html'
 };
 
 // Handle specific routes first
