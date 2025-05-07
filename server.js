@@ -11,6 +11,9 @@ app.use(function(req, res, next) {
     next();
 });
 
+// Serve static files from the root directory
+app.use(express.static(path.join(__dirname)));
+
 // Define routes
 const routes = {
     '/': 'index.html',
@@ -25,15 +28,17 @@ const routes = {
     '/blog/is-bawbag-offensive': 'blog/is-bawbag-offensive.html'
 };
 
-// Handle specific routes first
+// Handle specific routes
 Object.entries(routes).forEach(([route, file]) => {
     app.get(route, (req, res) => {
-        res.sendFile(path.join(__dirname, file));
+        const filePath = path.join(__dirname, file);
+        if (fs.existsSync(filePath)) {
+            res.sendFile(filePath);
+        } else {
+            next();
+        }
     });
 });
-
-// Serve static files from the root directory
-app.use(express.static(path.join(__dirname)));
 
 // Serve data files with proper MIME type
 app.get('/data/*.json', function(req, res, next) {
