@@ -1,0 +1,9 @@
+# Database Configuration
+DB_HOST=scotpwsw_scottishinsults
+DB_PORT=3306
+DB_NAME=scotpwsw_scottishinsults
+DB_USER=scotpwsw_scottishadmin
+DB_PASSWORD=iNqgadaRBWDu-JnUqn4*
+
+# Application Configuration
+NODE_ENV=production

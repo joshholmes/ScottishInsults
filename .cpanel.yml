@@ -4,17 +4,25 @@ deployment:
     - export DEPLOYPATH=/home/user/public_html/
     - /bin/cp .htaccess $DEPLOYPATH
     - /bin/cp -R data $DEPLOYPATH
-    - /bin/cp -R images $DEPLOYPATH
+    - /bin/cp -R public $DEPLOYPATH
+    - /bin/cp -R views $DEPLOYPATH
+    - /bin/cp -R private $DEPLOYPATH
     - /bin/cp index.html $DEPLOYPATH
     - /bin/cp about.html $DEPLOYPATH
     - /bin/cp donate.html $DEPLOYPATH
-    - /bin/cp insultGenerator.js $DEPLOYPATH
-    - /bin/cp speech.js $DEPLOYPATH
-    - /bin/cp styles.css $DEPLOYPATH
-    - /bin/cp theme.css $DEPLOYPATH
+    - /bin/cp privacy.html $DEPLOYPATH
+    - /bin/cp terms.html $DEPLOYPATH
     - /bin/cp site.webmanifest $DEPLOYPATH
     - /bin/cp favicon.ico $DEPLOYPATH
     - /bin/cp package.json $DEPLOYPATH
-    - /bin/cp server.js $DEPLOYPATH
-    - /bin/cp web.config $DEPLOYPATH
-    - /bin/cp .env $DEPLOYPATH 
+    - /bin/cp app.js $DEPLOYPATH
+    - /bin/cp .env $DEPLOYPATH
+    - /bin/cp ads.txt $DEPLOYPATH
+    - /bin/cp -R .well-known $DEPLOYPATH
+    - /bin/cp -R nc_assets $DEPLOYPATH
+    - /bin/npm install --production
+    - /bin/npm audit fix --production
+    - /bin/pm2 delete app || true
+    - /bin/pm2 start app.js --name app
+    - /bin/pm2 save
+    - /bin/pm2 logs app --lines 100 > deployment.log 

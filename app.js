@@ -2,7 +2,8 @@ require('dotenv').config();
 const express = require('express');
 const path = require('path');
 const mysql = require('mysql2/promise');
-const fs = require('fs').promises;
+const fs = require('fs');
+const fsPromises = require('fs').promises;
 const { router: blogRouter, setPool } = require('./public/blog-engine');
 const session = require('express-session');
 const bodyParser = require('body-parser');
@@ -86,7 +87,7 @@ async function setupDatabase() {
         if (blogPostsTable.length === 0 || usersTable.length === 0) {
             console.log('One or more required tables do not exist. Creating tables...');
             // Read and execute the SQL file
-            const sqlFile = await fs.readFile(path.join(__dirname, 'private/sql/create-blog-tables.sql'), 'utf8');
+            const sqlFile = await fsPromises.readFile(path.join(__dirname, 'private/sql/create-blog-tables.sql'), 'utf8');
             await pool.query(sqlFile);
             console.log('Required tables created successfully!');
         } else {
@@ -113,25 +114,37 @@ async function setupDatabase() {
 // Routes
 app.use('/blog', blogRouter);
 
-// Serve static HTML files for other routes
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
+// Define static routes
+const routes = {
+    '/': 'index.html',
+    '/about': 'about.html',
+    '/donate': 'donate.html',
+    '/privacy': 'privacy.html',
+    '/terms': 'terms.html',
+    '/blog': 'blog/index.html',
+    '/blog/top-10-scottish-insults-work': 'blog/top-10-scottish-insults-work.html',
+    '/blog/scottish-swearing-etiquette': 'blog/scottish-swearing-etiquette.html',
+    '/blog/history-scottish-slang': 'blog/history-scottish-slang.html',
+    '/blog/is-bawbag-offensive': 'blog/is-bawbag-offensive.html'
+};
+
+// Handle specific routes
+Object.entries(routes).forEach(([route, file]) => {
+    app.get(route, async (req, res, next) => {
+        const filePath = path.join(__dirname, file);
+        try {
+            await fsPromises.access(filePath);
+            res.sendFile(filePath);
+        } catch (err) {
+            next();
+        }
+    });
 });
 
-app.get('/about', (req, res) => {
-    res.sendFile(path.join(__dirname, 'about.html'));
-});
-
-app.get('/donate', (req, res) => {
-    res.sendFile(path.join(__dirname, 'donate.html'));
-});
-
-app.get('/privacy', (req, res) => {
-    res.sendFile(path.join(__dirname, 'privacy.html'));
-});
-
-app.get('/terms', (req, res) => {
-    res.sendFile(path.join(__dirname, 'terms.html'));
+// Serve data files with proper MIME type
+app.get('/data/*.json', function(req, res, next) {
+    res.setHeader('Content-Type', 'application/json');
+    next();
 });
 
 // Login page

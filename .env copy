@@ -1,0 +1,9 @@
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=scottishinsults
+DB_USER=root
+DB_PASSWORD=marlin@22
+
+# Application Configuration
+NODE_ENV=development
