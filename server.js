@@ -47,8 +47,20 @@ app.get('/data/*.json', function(req, res, next) {
 });
 
 // Handle 404 for unknown routes
-app.use((req, res) => {
-    res.status(404).sendFile(path.join(__dirname, '404.html'));
+app.use((req, res, next) => {
+    const reqPath = req.path;
+    if (
+        reqPath.includes('/private/') ||
+        reqPath.includes('/node_modules/') ||
+        reqPath.endsWith('.md') ||
+        reqPath.endsWith('package.json') ||
+        reqPath.endsWith('package-lock.json') ||
+        reqPath.endsWith('.env') ||
+        reqPath.endsWith('.gitignore')
+    ) {
+        return res.status(404).sendFile(path.join(__dirname, '404.html'));
+    }
+    next();
 });
 
 // Error handling middleware

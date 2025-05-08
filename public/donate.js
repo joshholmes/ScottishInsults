@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Disable the submit button to prevent repeated clicks
             stripeButton.disabled = true;
-            stripeButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+            stripeButton.innerHTML = '<img src="/public/images/credit-card.svg" alt="Card" class="payment-icon"> Donate with Card';
 
             try {
                 const { token, error } = await stripe.createToken(card);
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const errorElement = document.getElementById('card-errors');
                     errorElement.textContent = error.message;
                     stripeButton.disabled = false;
-                    stripeButton.innerHTML = '<img src="/images/credit-card.svg" alt="Card" class="payment-icon"> Donate with Card';
+                    stripeButton.innerHTML = '<img src="/public/images/credit-card.svg" alt="Card" class="payment-icon"> Donate with Card';
                 } else {
                     // Send the token to your server
                     const response = await fetch('/api/donate', {
@@ -111,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 const errorElement = document.getElementById('card-errors');
                 errorElement.textContent = error.message;
                 stripeButton.disabled = false;
-                stripeButton.innerHTML = '<img src="/images/credit-card.svg" alt="Card" class="payment-icon"> Donate with Card';
+                stripeButton.innerHTML = '<img src="/public/images/credit-card.svg" alt="Card" class="payment-icon"> Donate with Card';
             }
         });
     }
