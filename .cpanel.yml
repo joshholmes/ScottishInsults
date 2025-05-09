@@ -1,28 +1,52 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/user/public_html/
-    - /bin/cp .htaccess $DEPLOYPATH
-    - /bin/cp -R data $DEPLOYPATH
-    - /bin/cp -R public $DEPLOYPATH
-    - /bin/cp -R views $DEPLOYPATH
-    - /bin/cp -R private $DEPLOYPATH
-    - /bin/cp index.html $DEPLOYPATH
-    - /bin/cp about.html $DEPLOYPATH
-    - /bin/cp donate.html $DEPLOYPATH
-    - /bin/cp privacy.html $DEPLOYPATH
-    - /bin/cp terms.html $DEPLOYPATH
-    - /bin/cp site.webmanifest $DEPLOYPATH
-    - /bin/cp favicon.ico $DEPLOYPATH
-    - /bin/cp package.json $DEPLOYPATH
-    - /bin/cp app.js $DEPLOYPATH
-    - /bin/cp .env $DEPLOYPATH
-    - /bin/cp ads.txt $DEPLOYPATH
-    - /bin/cp -R .well-known $DEPLOYPATH
-    - /bin/cp -R nc_assets $DEPLOYPATH
+    - export STATICPATH=/home/user/public_html/
+    - export NODEPATH=/home/user/blognodeapp/
+    
+    # Static files
+    - /bin/cp -R public_html/* $STATICPATH
+    - /bin/cp -R public_html/public $STATICPATH
+    
+    # Node.js app
+    - /bin/cp -R blognodeapp/* $NODEPATH
+    - cd $NODEPATH
     - /bin/npm install --production
     - /bin/npm audit fix --production
-    - /bin/pm2 delete app || true
-    - /bin/pm2 start app.js --name app
+    - /bin/pm2 delete scottishinsults || true
+    - /bin/pm2 start app.js --name scottishinsults --time
     - /bin/pm2 save
-    - /bin/pm2 logs app --lines 100 > deployment.log 
+    
+    # Set permissions for static files
+    - /bin/chmod 755 $STATICPATH
+    - /bin/chmod 644 $STATICPATH/.htaccess
+    - /bin/chmod 644 $STATICPATH/*.html
+    - /bin/chmod 644 $STATICPATH/robots.txt
+    - /bin/chmod 644 $STATICPATH/sitemap.xml
+    - /bin/chmod 644 $STATICPATH/ads.txt
+    - /bin/chmod 644 $STATICPATH/site.webmanifest
+    - /bin/chmod 644 $STATICPATH/favicon.ico
+    - /bin/chmod -R 755 $STATICPATH/public
+    - /bin/chmod -R 755 $STATICPATH/.well-known
+    - /bin/chmod -R 755 $STATICPATH/nc_assets
+    
+    # Set permissions for Node.js app
+    - /bin/chmod 755 $NODEPATH
+    - /bin/chmod 644 $NODEPATH/.htaccess
+    - /bin/chmod 755 $NODEPATH/app.js
+    - /bin/chmod 755 $NODEPATH/blog-engine.js
+    - /bin/chmod -R 755 $NODEPATH/views
+    - /bin/chmod -R 755 $NODEPATH/private
+    - /bin/chmod -R 755 $NODEPATH/data
+    - /bin/chmod -R 755 $NODEPATH/scripts
+    - /bin/chmod 600 $NODEPATH/.env
+    
+    # Create logs directory
+    - /bin/mkdir -p $NODEPATH/logs
+    - /bin/chmod 755 $NODEPATH/logs
+    
+    # Backup database
+    - /bin/mysqldump -u $DB_USER -p$DB_PASSWORD $DB_NAME > $NODEPATH/backups/db_$(date +%Y%m%d_%H%M%S).sql
+    
+    # Log deployment
+    - /bin/echo "Deployment completed at $(date)" >> $NODEPATH/logs/deployment.log 

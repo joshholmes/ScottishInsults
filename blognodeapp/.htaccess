@@ -1,0 +1,20 @@
+# Prevent direct access to Node.js files
+<FilesMatch "\.(js|json|env|config)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Prevent directory listing
+Options -Indexes
+
+# Protect sensitive files
+<FilesMatch "^\.">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+
+# Allow access to public files
+<FilesMatch "\.(css|js|jpg|jpeg|png|gif|ico|svg|webp)$">
+    Order allow,deny
+    Allow from all
+</FilesMatch> 

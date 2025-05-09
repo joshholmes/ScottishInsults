@@ -1,0 +1,15 @@
+User-agent: *
+Allow: /
+Allow: /blog/
+Allow: /about
+Allow: /donate
+Allow: /privacy
+Allow: /terms
+
+Disallow: /admin
+Disallow: /login
+Disallow: /blog/create
+Disallow: /blog/edit
+Disallow: /nodeapp/
+
+Sitemap: https://scottishinsults.com/sitemap.xml 

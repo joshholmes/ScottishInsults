@@ -1,135 +1,146 @@
-# Deployment Guide for Windows Server 2012 with IIS
+# Deployment Guide for Namecheap Shared Hosting with LiteSpeed
 
 ## Prerequisites
 
-1. Install Node.js
-   - Download and install Node.js v12.x LTS from https://nodejs.org/download/release/
-   - Choose the Windows x64 MSI installer
-   - Make sure to check "Add to PATH" during installation
-   - **IMPORTANT**: Use Node.js v12.x LTS for best compatibility with Windows Server 2012
+1. Namecheap Shared Hosting Account
+   - LiteSpeed Web Server
+   - Node.js support
+   - MySQL database
+   - SSH access (optional but recommended)
 
-2. Install IIS
-   - Open Server Manager
-   - Add Roles and Features
-   - Select Web Server (IIS)
-   - Install the following features:
-     - URL Rewrite Module
-     - Application Request Routing
-     - HTTP Redirection
-
-3. Install iisnode
-   - Download iisnode from https://github.com/Azure/iisnode/releases
-   - Choose the x64 version compatible with your Windows Server
-   - Run the installer
-   - Restart IIS after installation
+2. Domain Name
+   - Registered with Namecheap
+   - DNS configured to point to Namecheap nameservers
+   - SSL certificate (Let's Encrypt is included)
 
 ## Deployment Steps
 
-1. Create Application Pool
-   - Open IIS Manager
-   - Right-click on Application Pools
-   - Add Application Pool
-   - Name: "ScottishInsults"
-   - .NET CLR Version: "No Managed Code"
-   - Managed Pipeline Mode: "Integrated"
-
-2. Create Website
-   - Right-click on Sites
-   - Add Website
-   - Site name: "ScottishInsults"
-   - Physical path: [path to your application]
-   - Application pool: "ScottishInsults"
-   - Binding: Configure your desired hostname and port
-
-3. Configure Application
-   - Copy all project files to the website directory
-   - Run the included `deploy.bat` script to:
-     - Install dependencies
-     - Set proper permissions
-     - Create necessary directories
-   - Ensure web.config is in the root directory
-
-4. Environment Variables
-   - The deploy.bat script will create a .env file if it doesn't exist
-   - You can modify the .env file to add additional environment variables:
+1. Prepare Your Application
+   - Ensure your project structure matches the following:
      ```
-     PORT=3000
+     /
+     ├── public_html/           # Static files
+     │   ├── .htaccess         # Main .htaccess for static files
+     │   ├── *.html            # HTML pages
+     │   ├── robots.txt        # Search engine directives
+     │   ├── sitemap.xml       # Site map for search engines
+     │   └── public/           # Public assets
+     │       ├── scripts/      # Client-side JavaScript
+     │       ├── images/       # Static images
+     │       ├── styles.css    # Main styles
+     │       └── theme.css     # Theme styles
+     └── blognodeapp/          # Node.js application
+         ├── .htaccess         # Node.js specific .htaccess
+         ├── app.js            # Main application file
+         ├── blog-engine.js    # Blog functionality
+         ├── package.json      # Node.js dependencies
+         ├── .env              # Environment variables
+         ├── views/            # EJS templates
+         ├── private/          # Private data
+         └── data/             # JSON data files
+     ```
+
+2. Database Setup
+   - Log in to cPanel
+   - Create a new MySQL database
+   - Create a database user with strong password
+   - Grant all privileges to the user on the database
+   - Note down the database credentials
+
+3. Environment Configuration
+   - Create `.env` file in `blognodeapp` directory:
+     ```
+     # Server Configuration
      NODE_ENV=production
+     PORT=3000
+
+     # Database Configuration
+     DB_HOST=localhost
+     DB_USER=your_db_user
+     DB_PASSWORD=your_db_password
+     DB_NAME=scottishinsults
+
+     # Session Configuration
+     SESSION_SECRET=your_session_secret
+
+     # Admin Configuration
+     ADMIN_USERNAME=admin
+     ADMIN_PASSWORD=your_admin_password
+
+     # Security
+     CORS_ORIGIN=https://your-domain.com
      ```
 
-5. Start the Application
-   - The application will start automatically through iisnode
-   - Check the application pool is running
-   - Verify the website is started in IIS
+4. File Upload
+   - Upload all files maintaining the directory structure
+   - Use SFTP or cPanel File Manager
+   - Set correct permissions:
+     ```bash
+     chmod 755 public_html
+     chmod 644 public_html/.htaccess
+     chmod 755 blognodeapp
+     chmod 600 blognodeapp/.env
+     chmod 755 blognodeapp/app.js
+     ```
+
+5. Node.js Setup
+   - SSH into your hosting (if available)
+   - Navigate to blognodeapp directory
+   - Install dependencies:
+     ```bash
+     npm install --production
+     ```
+   - Start the application:
+     ```bash
+     pm2 start app.js --name scottishinsults
+     pm2 save
+     ```
+
+6. SSL Configuration
+   - In cPanel, go to SSL/TLS
+   - Install Let's Encrypt certificate
+   - Force HTTPS in .htaccess
 
 ## Troubleshooting
 
 1. Check Logs
-   - Application logs: `%SystemDrive%\inetpub\logs\LogFiles\W3SVC1`
-   - iisnode logs: `%SystemDrive%\inetpub\logs\iisnode`
-   - Node.js logs: `[your-app-directory]\iisnode`
+   - Node.js logs: `blognodeapp/logs/`
+   - LiteSpeed logs: cPanel > Error Log
+   - PM2 logs: `pm2 logs scottishinsults`
 
 2. Common Issues
-   - 500 Error: Check iisnode logs for Node.js errors
-   - 404 Error: Verify URL Rewrite rules in web.config
-   - Application Pool Issues: Check identity permissions
-   - SyntaxError: Unexpected token - This usually indicates Node.js version incompatibility
+   - 500 Error: Check Node.js logs
+   - 404 Error: Verify .htaccess configuration
+   - Database Connection: Verify credentials in .env
+   - Permission Issues: Check file permissions
 
 3. Performance Tuning
-   - Adjust application pool settings
-   - Configure recycling settings
-   - Monitor memory usage
+   - Enable LiteSpeed Cache
+   - Configure browser caching
+   - Optimize images
+   - Minify CSS/JS
 
-4. Specific Error Solutions
+4. Security Considerations
+   - Keep Node.js and dependencies updated
+   - Use strong passwords
+   - Enable HTTPS
+   - Regular backups
+   - Monitor error logs
 
-   a. Missing Image Files (404 errors for .svg files)
-   - Verify all image files are in the correct location
-   - Check file permissions on the images directory
-   - Run the test-server.js script to verify file existence
-   - Ensure the web.config file has the correct MIME type mappings for .svg files
+## Maintenance
 
-   b. Missing Data Files (404 errors for .json files)
-   - Verify all JSON files are in the data directory
-   - Check file permissions on the data directory
-   - Ensure the server.js file has the correct route for serving JSON files
-   - Add the following to web.config if needed:
-     ```xml
-     <staticContent>
-       <mimeMap fileExtension=".json" mimeType="application/json" />
-     </staticContent>
-     ```
+1. Regular Updates
+   - Check for Node.js updates
+   - Update dependencies
+   - Monitor security advisories
 
-   c. Blocked External Resources (ERR_BLOCKED_BY_CLIENT)
-   - These errors are often caused by ad blockers or security software
-   - For Google Analytics and Facebook SDK, consider:
-     - Adding appropriate CORS headers in web.config
-     - Using local copies of these scripts instead of CDN versions
-     - Adding appropriate security exceptions in your firewall
+2. Backup Strategy
+   - Database backups
+   - File backups
+   - Configuration backups
 
-   d. SyntaxError: Unexpected token
-   - This error typically occurs when using newer JavaScript syntax with an older Node.js version
-   - Ensure you're using Node.js v12.x LTS
-   - The server.js file has been updated to use older JavaScript syntax for compatibility
-   - If you still encounter this error, check for ES6+ syntax in other JavaScript files
-
-5. Testing the Deployment
-   - Run the included test-server.js script to verify all files are present
-   - Check the browser console for any remaining errors
-   - Verify all functionality works as expected
-
-## Security Considerations
-
-1. File Permissions
-   - Set appropriate NTFS permissions
-   - Use ApplicationPoolIdentity
-   - Restrict access to sensitive files
-
-2. SSL/TLS
-   - Install SSL certificate
-   - Configure HTTPS binding
-   - Force HTTPS redirect
-
-3. Firewall
-   - Open necessary ports
-   - Configure Windows Firewall rules
-   - Restrict access to management ports 
+3. Monitoring
+   - Check error logs
+   - Monitor disk space
+   - Monitor database size
+   - Check SSL certificate expiration 
